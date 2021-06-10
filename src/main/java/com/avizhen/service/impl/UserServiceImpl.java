@@ -45,4 +45,22 @@ public class UserServiceImpl implements UserService {
         User user = userConverter.convertToEntity(userRegistrationDto);
         return userRepository.save(user);
     }
+
+    @Override
+    public User updateUser(Integer userId, UserRegistrationDto userRegistrationDto) {
+        User userToUpdate = userRepository.getOne(userId);
+        userToUpdate.setUsername(userRegistrationDto.getUsername());
+        userToUpdate.setFirstName(userRegistrationDto.getFirstName());
+        userToUpdate.setLastName(userRegistrationDto.getLastName());
+        userToUpdate.setPassword(passwordEncoder.encode(userRegistrationDto.getPassword()));
+        userToUpdate.setRole(userRegistrationDto.getRole());
+        userToUpdate.setStatus(userRegistrationDto.getStatus());
+        return userRepository.saveAndFlush(userToUpdate);
+    }
+
+    @Override
+    public void delete(Integer userId) {
+        userRepository.deleteById(userId);
+
+    }
 }

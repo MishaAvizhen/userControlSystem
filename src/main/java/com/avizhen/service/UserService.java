@@ -11,4 +11,8 @@ public interface UserService {
     User findUserById(Integer id);
 
     User registerUser(UserRegistrationDto userRegistrationDto);
+
+    User updateUser(Integer userId, UserRegistrationDto userRegistrationDto);
+
+    void delete(Integer userId);
 }

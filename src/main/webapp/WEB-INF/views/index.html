@@ -32,10 +32,23 @@
                     <td th:text="${user.getRole()}"></td>
                     <td th:text="${user.getStatus()}"></td>
                     <td th:text="${user.getCreatedDate()}"></td>
+                    <td>
+                        <a th:href="@{/{id}/edit(id=${user.getId()})}">Edit</a>
+                    </td>
+                    <td>
+                        <form th:method="DELETE" th:action="@{/user/{id}(id=${user.getId()})}">
+                            <input type="submit" value="Delete"/>
+                        </form>
+                    </td>
 
                 </tr>
                 </tbody>
             </table>
+            <br/>
+            <hr/>
+            <form th:method="GET" th:action="@{/new}">
+                <input type="submit" value="Create new user"/>
+            </form>
         </div>
     </div>
 
