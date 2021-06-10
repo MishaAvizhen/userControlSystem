@@ -3,7 +3,6 @@ package com.avizhen.converter.impl;
 import com.avizhen.converter.Converter;
 import com.avizhen.dto.UserRegistrationDto;
 import com.avizhen.entity.User;
-import com.avizhen.enums.Role;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,8 +20,4 @@ public class UserConverter implements Converter<User, UserRegistrationDto> {
         return user;
     }
 
-    @Override
-    public User convertEntityToUpdate(UserRegistrationDto dto, User entity) {
-        return null;
-    }
 }
