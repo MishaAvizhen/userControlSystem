@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+</head>
+
+<body>
+<main role="main" class="container">
+
+    <div th:switch="${users}">
+        <h2 th:case="null">No users yet!</h2>
+        <div th:case="*">
+            <h2>Users:</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Created date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users}">
+                    <td>
+                        <a th:href="@{/user/{id}(id=${user.getId()})}" th:text="${user.getUsername()}">></a>
+                    </td>
+                    <td th:text="${user.getFirstName()}"></td>
+                    <td th:text="${user.getLastName()}"></td>
+                    <td th:text="${user.getRole()}"></td>
+                    <td th:text="${user.getStatus()}"></td>
+                    <td th:text="${user.getCreatedDate()}"></td>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+</main>
+
+</body>
+</html>

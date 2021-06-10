@@ -2,6 +2,7 @@ package com.avizhen.entity;
 
 import com.avizhen.enums.Role;
 import com.avizhen.enums.Status;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -28,6 +29,10 @@ public class User {
     private Status status;
     @Column(name = "created_date")
     private Date createdDate;
+    @PrePersist
+    protected void onCreate() {
+        createdDate = new Date();
+    }
 
     public User() {
     }
