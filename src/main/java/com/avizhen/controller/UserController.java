@@ -6,8 +6,10 @@ import com.avizhen.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -25,6 +27,7 @@ public class UserController {
         model.addAttribute("users", allUsers);
         return "index";
     }
+
     @GetMapping("/user/{id}")
     public String getUser(@PathVariable int id, Model model) {
         User userById = userService.findUserById(id);
@@ -33,15 +36,22 @@ public class UserController {
     }
 
     @GetMapping("/new")
-    public String newUser(@ModelAttribute("userRegistrationDto") UserRegistrationDto userRegistrationDto) {
+    public String newUser(Model model) {
+        model.addAttribute("userRegistrationDto", new UserRegistrationDto());
         return "new";
     }
 
     @PostMapping("/user")
-    public String createUser( @ModelAttribute("userRegistrationDto") UserRegistrationDto userRegistrationDto) {
-         userService.registerUser(userRegistrationDto);
+    public String createUser(@Valid UserRegistrationDto userRegistrationDto,
+                             BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors())
+            return "/new";
+        User user = userService.registerUser(userRegistrationDto);
+        model.addAttribute("userRegistrationDto", user);
+
         return "redirect:/users";
     }
+
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable int id) {
         User userById = userService.findUserById(id);

@@ -10,6 +10,8 @@ public interface UserService {
 
     User findUserById(Integer id);
 
+    User findUserByUsername(String username);
+
     User registerUser(UserRegistrationDto userRegistrationDto);
 
     User updateUser(Integer userId, UserRegistrationDto userRegistrationDto);
