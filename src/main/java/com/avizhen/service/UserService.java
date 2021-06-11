@@ -2,6 +2,7 @@ package com.avizhen.service;
 
 import com.avizhen.dto.UserRegistrationDto;
 import com.avizhen.entity.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
