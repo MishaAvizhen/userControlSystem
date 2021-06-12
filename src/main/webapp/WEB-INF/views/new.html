@@ -1,38 +1,98 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <meta charset="UTF-8">
-    <title>New user</title>
+    <meta charset="ISO-8859-1">
+    <title>User control system</title>
+
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+
 </head>
 <body>
+<!-- create navigation bar ( header) -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#" th:href="@{/users}">Login Module</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li sec:authorize="isAuthenticated()">
+                    <a th:href="@{/logout}">Logout</a>
+                </li>
+                <li style="color:lightseagreen" sec:authentication="principal.username"></li>
+            </ul>
 
-<form th:method="POST" th:action="@{/user}" th:object="${userRegistrationDto}">
-    <label for="username">Enter username: </label>
-    <input type="text" th:field="*{username}" id="username"/>
-    <div style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
-    <br/>
-    <label for="password">Enter password: </label>
-    <input type="password" th:field="*{password}" id="password"/>
-    <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
-    <br/>
-    <label for="firstName">Enter firstName: </label>
-    <input type="text" th:field="*{firstName}" id="firstName"/>
-    <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
-    <br/>
-    <label for="lastName">Enter lastName: </label>
-    <input type="text" th:field="*{lastName}" id="lastName"/>
-    <div style="color:red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
-    <br/>
-    <label for="status">Choose status: </label>
-    <input type="text" th:field="*{status}" id="status"/>
-    <div style="color:red" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
-    <br/>
-    <label for="role">Choose role: </label>
-    <input type="text" th:field="*{role}" id="role"/>
-    <div style="color:red" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></div>
-    <br/>
-    <input type="submit" value="Create!"/>
-</form>
+
+        </div>
+    </div>
+</nav>
+<br>
+<br>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <h1> Create new user: </h1>
+            <form th:method="POST" th:action="@{/user}" th:object="${userRegistrationDto}">
+                <label for="username">Enter username: </label>
+                <div class="form-group">
+                    <input class="form-control" type="text" th:field="*{username}" id="username"
+                           placeholder="username"/>
+                    <div style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+                </div>
+                <label for="password">Enter password: </label>
+                <div class="form-group">
+                    <input class="form-control" type="password" th:field="*{password}" id="password"
+                           placeholder="password"/>
+                    <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                </div>
+                <label for="firstName">Enter firstName: </label>
+                <div class="form-group">
+                    <input class="form-control" type="text" th:field="*{firstName}" id="firstName"
+                           placeholder="firstName"/>
+                    <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+                </div>
+                <label for="lastName">Enter lastName: </label>
+                <div class="form-group">
+                    <input class="form-control" type="text" th:field="*{lastName}" id="lastName"
+                           placeholder="lastName"/>
+                    <div style="color:red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+                </div>
+                <label for="status">Choose status: </label>
+                <div class="form-group">
+                    <select class="form-control selectpicker" th:field="*{status}" id="status">
+                        <option th:value="'ACTIVE'" th:text="ACTIVE"></option>
+                        <option th:value="'INACTIVE'" th:text="INACTIVE"></option>
+                    </select>
+                    <div style="color:red" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
+                </div>
+                <label for="role">Choose role: </label>
+                <div class="form-group">
+                    <select class="form-control selectpicker" th:field="*{role}" id="role">
+                        <option th:value="'USER'" th:text="USER"></option>
+                        <option th:value="'ADMIN'" th:text="ADMIN"></option>
+                    </select>
+                    <div style="color:red" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6 col-sm-offset-3">
+                            <input type="submit" name="create-submit" id="create-submit"
+                                   class="form-control btn btn-primary" value="Create user"/>
+                        </div>
+                    </div>
+
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
+
