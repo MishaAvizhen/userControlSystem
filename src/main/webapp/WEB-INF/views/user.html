@@ -34,6 +34,11 @@
                     <input type="submit" value="Delete"/>
                 </form>
             </td>
+            <td>
+                <form th:method="PATCH" th:action="@{/user/{id}/lock(id=${user.getId()})}">
+                    <input type="submit" value="Change status"/>
+                </form>
+            </td>
 
         </tbody>
     </table>

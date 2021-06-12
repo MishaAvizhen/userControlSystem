@@ -2,6 +2,7 @@ package com.avizhen.controller;
 
 import com.avizhen.dto.UserRegistrationDto;
 import com.avizhen.entity.User;
+import com.avizhen.enums.Role;
 import com.avizhen.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,7 +11,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -29,8 +29,8 @@ public class UserController {
 
 
     @GetMapping("/users")
-    public String showUsersList(Model model) {
-        List<User> allUsers = userService.findAllUsers();
+    public String showUsersList(Model model, String username, Role role) {
+        List<User> allUsers = userService.filteredUsers(username, role);
         model.addAttribute("users", allUsers);
         return "index";
     }
@@ -68,7 +68,7 @@ public class UserController {
 
     @PatchMapping("/user/{id}")
     public String updateUser(@ModelAttribute("user") UserRegistrationDto userRegistrationDto,
-                         @PathVariable int id) {
+                             @PathVariable int id) {
         userService.updateUser(id, userRegistrationDto);
         return "redirect:/users";
     }
@@ -77,5 +77,11 @@ public class UserController {
     public String delete(@PathVariable int id) {
         userService.delete(id);
         return "redirect:/users";
+    }
+
+    @PatchMapping("/user/{id}/lock")
+    public String lockUser(@PathVariable int id) {
+        userService.lockUser(id);
+        return "redirect:/user/{id}";
     }
 }

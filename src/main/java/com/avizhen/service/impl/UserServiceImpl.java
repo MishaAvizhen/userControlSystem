@@ -3,6 +3,8 @@ package com.avizhen.service.impl;
 import com.avizhen.converter.impl.UserConverter;
 import com.avizhen.dto.UserRegistrationDto;
 import com.avizhen.entity.User;
+import com.avizhen.enums.Role;
+import com.avizhen.enums.Status;
 import com.avizhen.repository.UserRepository;
 import com.avizhen.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -67,5 +70,26 @@ public class UserServiceImpl implements UserService {
     public void delete(Integer userId) {
         userRepository.deleteById(userId);
 
+    }
+
+    @Override
+    public void lockUser(Integer userId) {
+        User user = userRepository.getOne(userId);
+        if (user.getStatus().equals(Status.ACTIVE)) {
+            user.setStatus(Status.INACTIVE);
+            userRepository.saveAndFlush(user);
+        } else if (user.getStatus().equals(Status.INACTIVE)) {
+            user.setStatus(Status.ACTIVE);
+            userRepository.saveAndFlush(user);
+        }
+    }
+
+    @Override
+    public List<User> filteredUsers(String username, Role role) {
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .filter(u -> username == null || u.getUsername().equals(username))
+                .filter(u -> role == null || u.getRole().equals(role))
+                .collect(Collectors.toList());
     }
 }
