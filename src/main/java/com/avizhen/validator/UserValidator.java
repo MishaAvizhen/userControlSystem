@@ -31,7 +31,10 @@ public class UserValidator implements Validator {
 
 
         if (userService.findUserByUsername(user.getUsername()) != null) {
-            errors.rejectValue("username", "Duplicate.userForm.username");
+            errors.rejectValue("username", "Duplicate.username");
+        }
+        if (!user.getPassword().matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{3,16}$")) {
+            errors.rejectValue("password", "Difficult.password");
         }
 
 

@@ -4,21 +4,23 @@ import com.avizhen.enums.Role;
 import com.avizhen.enums.Status;
 import org.hibernate.validator.constraints.UniqueElements;
 
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class UserRegistrationDto {
 
     @Size(min = 3, max = 16, message
             = "Username must be between 3 and 16 characters")
+    @Pattern(regexp="[a-z]*", flags = Pattern.Flag.CASE_INSENSITIVE, message = "Only latin  letters")
     private String username;
-    @Size(min = 3, max = 16, message
-            = "Password must be between 3 and 16 characters")
     private String password;
     @Size(min = 1, max = 16, message
             = "First name must be between 3 and 16 characters")
+    @Pattern(regexp="[a-z]*", flags = Pattern.Flag.CASE_INSENSITIVE, message = "Only latin  letters")
     private String firstName;
     @Size(min = 1, max = 16, message
             = "Last name must be between 3 and 16 characters")
+    @Pattern(regexp="[a-z]*", flags = Pattern.Flag.CASE_INSENSITIVE, message = "Only latin  letters")
     private String lastName;
     private Status status;
     private Role role;
