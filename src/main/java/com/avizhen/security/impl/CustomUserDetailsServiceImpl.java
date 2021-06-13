@@ -2,6 +2,7 @@ package com.avizhen.security.impl;
 
 
 import com.avizhen.entity.User;
+import com.avizhen.enums.Status;
 import com.avizhen.repository.UserRepository;
 import com.avizhen.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
-        if (user == null) {
+        if (user == null || user.getStatus().equals(Status.INACTIVE)) {
             throw new UsernameNotFoundException("No user present with username: " + username);
         }
         return new CustomUserDetails(user);

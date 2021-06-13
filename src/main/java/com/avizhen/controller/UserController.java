@@ -4,6 +4,7 @@ import com.avizhen.dto.UserRegistrationDto;
 import com.avizhen.entity.User;
 import com.avizhen.enums.Role;
 import com.avizhen.service.UserService;
+import com.avizhen.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,11 +17,15 @@ import java.util.List;
 @Controller
 public class UserController {
     private UserService userService;
+    private UserValidator userValidator;
+
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserValidator userValidator) {
         this.userService = userService;
+        this.userValidator = userValidator;
     }
+
 
     @GetMapping("/login")
     public String login() {
@@ -51,8 +56,10 @@ public class UserController {
     @PostMapping("/user")
     public String createUser(@Valid UserRegistrationDto userRegistrationDto,
                              BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors())
+        userValidator.validate(userRegistrationDto, bindingResult);
+        if (bindingResult.hasErrors()) {
             return "/new";
+        }
         User user = userService.registerUser(userRegistrationDto);
         model.addAttribute("userRegistrationDto", user);
 
