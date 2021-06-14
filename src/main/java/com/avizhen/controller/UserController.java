@@ -66,7 +66,7 @@ public class UserController {
     @PostMapping("/user")
     public String createUser(@Valid UserRegistrationDto userRegistrationDto,
                              BindingResult bindingResult, Model model) {
-        userValidator.validate(userRegistrationDto, bindingResult);
+        userValidator.validateOnCreate(userRegistrationDto, bindingResult);
         if (bindingResult.hasErrors()) {
             return "/new";
         }
@@ -81,7 +81,8 @@ public class UserController {
     @PatchMapping("/user/{id}")
     public String updateUser(@Valid @ModelAttribute("user") UserRegistrationDto userRegistrationDto,
                              BindingResult bindingResult, @PathVariable int id, Model model, RedirectAttributes redirectAttributes) {
-        userValidator.validate(userRegistrationDto, bindingResult);
+        userRegistrationDto.setUserId(id);
+        userValidator.validateOnUpdate(userRegistrationDto, bindingResult);
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("user", userService.findUserById(id));
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", bindingResult);

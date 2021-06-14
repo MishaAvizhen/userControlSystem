@@ -38,6 +38,25 @@ public class User {
     public User() {
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        if (!id.equals(user.id)) return false;
+        return username.equals(user.username);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + username.hashCode();
+        return result;
+    }
+
     public User(String username, String password, String firstName, String lastName,
                 Role role, Status status, Date createdDate) {
         this.username = username;

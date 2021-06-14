@@ -9,6 +9,8 @@ import javax.validation.constraints.Size;
 
 public class UserRegistrationDto {
 
+    private Integer userId;
+
     @Size(min = 3, max = 16, message
             = "Username must be between 3 and 16 characters")
     @Pattern(regexp="[a-z]*", flags = Pattern.Flag.CASE_INSENSITIVE, message = "Only latin  letters")
@@ -83,5 +85,13 @@ public class UserRegistrationDto {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }
