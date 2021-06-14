@@ -16,6 +16,10 @@ public class UserValidator {
 
     public void validateOnCreate(UserRegistrationDto userRegistrationDto, Errors errors) {
         commonValidationForUpdateAndCreateUser(userRegistrationDto, errors);
+        validateUsernameIsUnique(userRegistrationDto, errors);
+    }
+
+    private void validateUsernameIsUnique(UserRegistrationDto userRegistrationDto, Errors errors) {
         if (userService.findUserByUsername(userRegistrationDto.getUsername()) != null) {
             errors.rejectValue("username", "Duplicate.username");
         }
@@ -26,7 +30,10 @@ public class UserValidator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "Required");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lastName", "Required");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "firstName", "Required");
+        validateIsPasswordCorrespondToPasswordRules(userRegistrationDto, errors);
+    }
 
+    private void validateIsPasswordCorrespondToPasswordRules(UserRegistrationDto userRegistrationDto, Errors errors) {
         if (!userRegistrationDto.getPassword().matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{3,16}$")) {
             errors.rejectValue("password", "Difficult.password");
         }
@@ -35,9 +42,12 @@ public class UserValidator {
     public void validateOnUpdate(UserRegistrationDto userRegistrationDto, Errors errors) {
         commonValidationForUpdateAndCreateUser(userRegistrationDto, errors);
         User updatedUser = userService.findUserById(userRegistrationDto.getUserId());
-        if (!updatedUser.getUsername().equals(userRegistrationDto.getUsername()) &&
-                userService.findUserByUsername(userRegistrationDto.getUsername()) != null) {
-            errors.rejectValue("username", "Duplicate.username");
+        if (isUsernameWasChanged(userRegistrationDto, updatedUser)) {
+            validateUsernameIsUnique(userRegistrationDto, errors);
         }
+    }
+
+    private boolean isUsernameWasChanged(UserRegistrationDto userRegistrationDto, User updatedUser) {
+        return !updatedUser.getUsername().equals(userRegistrationDto.getUsername());
     }
 }

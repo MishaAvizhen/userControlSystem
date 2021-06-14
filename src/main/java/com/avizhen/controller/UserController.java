@@ -72,7 +72,6 @@ public class UserController {
         }
         User user = userService.registerUser(userRegistrationDto);
         model.addAttribute("userRegistrationDto", user);
-
         return "redirect:/user";
     }
 
