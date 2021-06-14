@@ -47,7 +47,6 @@ public class User {
 
         if (!id.equals(user.id)) return false;
         return username.equals(user.username);
-
     }
 
     @Override

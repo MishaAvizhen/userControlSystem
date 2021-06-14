@@ -27,7 +27,6 @@ public class UserController {
         this.userValidator = userValidator;
     }
 
-
     @GetMapping("/login")
     public String login() {
         return "login";
@@ -74,8 +73,6 @@ public class UserController {
         model.addAttribute("userRegistrationDto", user);
         return "redirect:/user";
     }
-
-
 
     @PatchMapping("/user/{id}")
     public String updateUser(@Valid @ModelAttribute("user") UserRegistrationDto userRegistrationDto,
