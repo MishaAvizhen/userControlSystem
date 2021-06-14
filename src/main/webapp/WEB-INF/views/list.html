@@ -16,7 +16,7 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#" th:href="@{/users}">Login Module</a>
+            <a class="navbar-brand" href="#" th:href="@{/user}">Login Module</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
@@ -72,22 +72,25 @@
             </table>
             <br/>
             <hr/>
-            <form th:method="GET" th:action="@{/new}">
-                <input type="submit" name="create-submit" id="create-submit"
-                       class="form-control btn btn-success" value="Create user"/>
+            <form th:method="GET" th:action="@{/user/new}">
+                <div class="col-md-6 ">
+                    <input type="submit" name="create-submit" id="create-submit"
+                           class="form-control btn btn-success" value="Create user"/>
+                </div>
             </form>
-            <br>
-            <form method="GET" th:action="@{/users}">
-                <input type="text" name="username" placeholder="Enter username"/>
-                <input type="submit" value="Search"/>
-            </form>
-            <form method="GET" th:action="@{/users}">
-                <input type="text" name="role" placeholder="Enter role"/>
-                <input type="submit" value="Search"/>
-            </form>
-            <form method="GET" th:action="@{/users}">
-                <input type="submit" value="Clear"/>
-            </form>
+            <div class="col-md-6 ">
+                <form method="GET" th:action="@{/user}">
+                    <input type="text" name="username" placeholder="Enter username"/>
+                    <input type="submit" value="Search"/>
+                </form>
+                <form method="GET" th:action="@{/user}">
+                    <input type="text" name="role" placeholder="Enter role"/>
+                    <input type="submit" value="Search"/>
+                </form>
+                <form method="GET" th:action="@{/user}">
+                    <input type="submit" value="Clear"/>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -95,9 +98,6 @@
 <br>
 <br>
 
-<div class="container">
-    Welcome <span sec:authentication="principal.username"> User</span>
-</div>
 
 </body>
 </html>

@@ -1,5 +1,6 @@
 package com.avizhen.security.config;
 
+import com.avizhen.enums.Role;
 import com.avizhen.security.impl.CustomUserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -32,16 +33,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers(
-                "/registration**",
-                "/js/**",
-                "/css/**",
-                "/img/**").permitAll()
+        http.authorizeRequests()
+
+                .antMatchers(HttpMethod.PATCH).hasAnyAuthority((Role.ADMIN.name()))
+                .antMatchers(HttpMethod.DELETE).hasAnyAuthority((Role.ADMIN.name()))
+                .antMatchers(HttpMethod.POST).hasAnyAuthority((Role.ADMIN.name()))
+                .antMatchers(HttpMethod.GET, "/user/new").hasAnyAuthority((Role.ADMIN.name()))
+                .antMatchers(HttpMethod.GET, "/{\\\\\\\\d+}/edit").hasAnyAuthority((Role.ADMIN.name()))
+                .antMatchers(HttpMethod.GET, "/user").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/users", true)
+                .defaultSuccessUrl("/user", true)
                 .permitAll()
                 .and()
                 .logout()

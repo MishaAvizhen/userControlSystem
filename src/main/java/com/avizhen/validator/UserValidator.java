@@ -22,6 +22,7 @@ public class UserValidator implements Validator {
 
     @Override
     public void validate(Object o, Errors errors) {
+
         UserRegistrationDto user = (UserRegistrationDto) o;
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "Required");
@@ -38,6 +39,5 @@ public class UserValidator implements Validator {
         }
 
 
-
     }
-    }
+}

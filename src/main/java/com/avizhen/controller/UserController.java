@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -33,24 +34,33 @@ public class UserController {
     }
 
 
-    @GetMapping("/users")
+    @GetMapping("/user")
     public String showUsersList(Model model, String username, Role role) {
         List<User> allUsers = userService.filteredUsers(username, role);
         model.addAttribute("users", allUsers);
-        return "index";
+        return "list";
     }
 
     @GetMapping("/user/{id}")
     public String getUser(@PathVariable int id, Model model) {
         User userById = userService.findUserById(id);
         model.addAttribute("user", userById);
-        return "user";
+        return "view";
     }
 
-    @GetMapping("/new")
+    @GetMapping("user/new")
     public String newUser(Model model) {
         model.addAttribute("userRegistrationDto", new UserRegistrationDto());
         return "new";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String edit(Model model, @PathVariable int id) {
+        User userById = userService.findUserById(id);
+        if (!model.containsAttribute("user")) {
+            model.addAttribute("user", userById);
+        }
+        return "edit";
     }
 
     @PostMapping("/user")
@@ -63,27 +73,28 @@ public class UserController {
         User user = userService.registerUser(userRegistrationDto);
         model.addAttribute("userRegistrationDto", user);
 
-        return "redirect:/users";
+        return "redirect:/user";
     }
 
-    @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable int id) {
-        User userById = userService.findUserById(id);
-        model.addAttribute("user", userById);
-        return "edit";
-    }
+
 
     @PatchMapping("/user/{id}")
-    public String updateUser(@ModelAttribute("user") UserRegistrationDto userRegistrationDto,
-                             @PathVariable int id) {
+    public String updateUser(@Valid @ModelAttribute("user") UserRegistrationDto userRegistrationDto,
+                             BindingResult bindingResult, @PathVariable int id, Model model, RedirectAttributes redirectAttributes) {
+        userValidator.validate(userRegistrationDto, bindingResult);
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("user", userService.findUserById(id));
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", bindingResult);
+            return "redirect:/" + id + "/edit";
+        }
         userService.updateUser(id, userRegistrationDto);
-        return "redirect:/users";
+        return "redirect:/user";
     }
 
     @DeleteMapping("/user/{id}")
     public String delete(@PathVariable int id) {
         userService.delete(id);
-        return "redirect:/users";
+        return "redirect:/user";
     }
 
     @PatchMapping("/user/{id}/lock")
