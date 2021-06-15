@@ -8,10 +8,15 @@ import com.avizhen.enums.Status;
 import com.avizhen.repository.UserRepository;
 import com.avizhen.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,14 +32,10 @@ public class UserServiceImpl implements UserService {
         this.userConverter = userConverter;
     }
 
-    @Override
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
-    }
 
     @Override
     public User findUserById(Integer id) {
-        return userRepository.getOne(id);
+        return userRepository.findById(id).get();
     }
 
     @Override
@@ -55,15 +56,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(Integer userId, UserRegistrationDto userRegistrationDto) {
-        User userToUpdate = userRepository.getOne(userId);
+    public void updateUser(Integer userId, UserRegistrationDto userRegistrationDto) {
+        User userToUpdate = userRepository.findById(userId).get();
         userToUpdate.setUsername(userRegistrationDto.getUsername());
         userToUpdate.setFirstName(userRegistrationDto.getFirstName());
         userToUpdate.setLastName(userRegistrationDto.getLastName());
         userToUpdate.setPassword(passwordEncoder.encode(userRegistrationDto.getPassword()));
         userToUpdate.setRole(userRegistrationDto.getRole());
         userToUpdate.setStatus(userRegistrationDto.getStatus());
-        return userRepository.saveAndFlush(userToUpdate);
+        userRepository.save(userToUpdate);
     }
 
     @Override
@@ -74,22 +75,32 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void lockUser(Integer userId) {
-        User user = userRepository.getOne(userId);
+        User user = userRepository.findById(userId).get();
         if (user.getStatus().equals(Status.ACTIVE)) {
             user.setStatus(Status.INACTIVE);
-            userRepository.saveAndFlush(user);
+            userRepository.save(user);
         } else if (user.getStatus().equals(Status.INACTIVE)) {
             user.setStatus(Status.ACTIVE);
-            userRepository.saveAndFlush(user);
+            userRepository.save(user);
         }
     }
 
     @Override
-    public List<User> filteredUsers(String username, Role role) {
-        List<User> users = userRepository.findAll();
-        return users.stream()
-                .filter(u -> username == null || u.getUsername().equals(username))
-                .filter(u -> role == null || u.getRole().equals(role))
-                .collect(Collectors.toList());
+    public Page<User> findAllUsers(int pageNumber, String username, Role role) {
+        Pageable pageable = PageRequest.of(pageNumber - 1, 5);
+        if (username == null && role == null) {
+            return userRepository.findAll(pageable);
+        } else if (username != null && role != null) {
+            return userRepository.findByRoleAndUsername(role, username, pageable);
+        } else if (username != null) {
+            return userRepository.findByUsername(username, pageable);
+        } else {
+            return userRepository.findByRole(role, pageable);
+        }
+    }
+
+    @Override
+    public Page<User> findAllUsers(int pageNumber) {
+        return findAllUsers(pageNumber, null, null);
     }
 }

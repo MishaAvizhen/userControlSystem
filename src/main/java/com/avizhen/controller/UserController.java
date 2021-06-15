@@ -6,6 +6,7 @@ import com.avizhen.enums.Role;
 import com.avizhen.service.UserService;
 import com.avizhen.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,8 +35,32 @@ public class UserController {
 
 
     @GetMapping("/user")
-    public String showUsersList(Model model, String username, Role role) {
-        List<User> allUsers = userService.filteredUsers(username, role);
+    public String showUsersList(Model model) {
+        model.asMap().remove("username");
+        model.asMap().remove("role");
+        return showUsersListByPage(model, 1);
+    }
+
+    @GetMapping("/searchUser")
+    public String showUsersListFiltered(Model model, @RequestParam(value = "username", required = false) String username,
+                                        @RequestParam(value = "role", required = false) String role) {
+        model.addAttribute("username", username);
+        model.addAttribute("role", role);
+        return showUsersListByPage(model, 1);
+    }
+
+    @GetMapping("/page/{pageNumber}")
+    public String showUsersListByPage(Model model, @PathVariable("pageNumber") int currentPage) {
+
+        String username = (String) model.asMap().get("username");
+        String role = (String) model.asMap().get("role");
+        Page<User> userPage = userService.findAllUsers(currentPage, username, Role.defineRole(role));
+        long totalElements = userPage.getTotalElements();
+        int totalPages = userPage.getTotalPages();
+        List<User> allUsers = userPage.getContent();
+        model.addAttribute("totalElements", totalElements);
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", totalPages);
         model.addAttribute("users", allUsers);
         return "list";
     }

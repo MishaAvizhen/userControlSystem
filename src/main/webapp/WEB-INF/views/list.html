@@ -38,7 +38,7 @@
         <h2 th:case="null">No users yet!</h2>
         <div th:case="*">
             <h2>Users:</h2>
-            <table border="1">
+            <table border="1" th:cellpadding="5">
                 <thead>
                 <tr>
                     <th>Username</th>
@@ -47,22 +47,23 @@
                     <th>Role</th>
                     <th>Status</th>
                     <th>Created date</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="user : ${users}">
-                    <td>
+                    <td style="padding: 5px 5px 5px 5px;">
                         <a th:href="@{/user/{id}(id=${user.getId()})}" th:text="${user.getUsername()}">></a>
                     </td>
-                    <td th:text="${user.getFirstName()}"></td>
-                    <td th:text="${user.getLastName()}"></td>
-                    <td th:text="${user.getRole()}"></td>
-                    <td th:text="${user.getStatus()}"></td>
-                    <td th:text="${user.getCreatedDate()}"></td>
-                    <td>
-                        <a th:href="@{/{id}/edit(id=${user.getId()})}">Edit</a>
-                    </td>
-                    <td>
+                    <td style="padding: 5px 5px 5px 5px" th:text="${user.getFirstName()}"></td>
+                    <td style="padding: 5px 5px 5px 5px" th:text="${user.getLastName()}"></td>
+                    <td style="padding: 5px 5px 5px 5px" th:text="${user.getRole()}"></td>
+                    <td style="padding: 5px 5px 5px 5px" th:text="${user.getStatus()}"></td>
+                    <td style="padding: 5px 5px 5px 5px" th:text="${user.getCreatedDate()}"></td>
+                    <td style="padding: 5px 5px 5px 5px">
+                        <span>
+                            <a th:href="@{/{id}/edit(id=${user.getId()})}">Edit</a>
+                            </span>
                         <form th:method="DELETE" th:action="@{/user/{id}(id=${user.getId()})}">
                             <input type="submit" value="Delete"/>
                         </form>
@@ -70,6 +71,28 @@
                 </tr>
                 </tbody>
             </table>
+            <div>
+                Total Users: [[${totalElements}]] - Page: [[${currentPage}]] of [[${totalPages}]] -
+                &nbsp; &nbsp;
+                <a th:if="${currentPage > 1}" th:href="@{'/page/1'}">First</a>
+                <span th:unless="${currentPage > 1}">First</span>
+
+                <a th:if="${currentPage > 1}" th:href="@{'/page/' + ${currentPage - 1}}">Previous</a>
+                <span th:unless="${currentPage > 1}">Previous</span>
+
+                 <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+                     <a th:if="${currentPage != i}" th:href="@{'/page/' + ${i}}">[[${i}]]</a>
+                      <span th:unless="${currentPage != i}">[[${i}]]</span>
+                    &nbsp;
+                </span>
+
+                <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${currentPage + 1}}">Next</a>
+                <span th:unless="${currentPage < totalPages}">Next</span>
+
+                <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${totalPages}}">Last</a>
+                <span th:unless="${currentPage < totalPages}">Last</span>
+            </div>
+
             <br/>
             <hr/>
             <form th:method="GET" th:action="@{/user/new}">
@@ -79,16 +102,11 @@
                 </div>
             </form>
             <div class="col-md-6 ">
-                <form method="GET" th:action="@{/user}">
+                <form method="GET" th:action="@{/searchUser}">
                     <input type="text" name="username" placeholder="Enter username"/>
-                    <input type="submit" value="Search"/>
-                </form>
-                <form method="GET" th:action="@{/user}">
                     <input type="text" name="role" placeholder="Enter role"/>
                     <input type="submit" value="Search"/>
-                </form>
-                <form method="GET" th:action="@{/user}">
-                    <input type="submit" value="Clear"/>
+                    <a th:href="@{/user}">Clear</a>
                 </form>
             </div>
         </div>

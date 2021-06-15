@@ -42,8 +42,10 @@ public class UserValidator {
     public void validateOnUpdate(UserRegistrationDto userRegistrationDto, Errors errors) {
         commonValidationForUpdateAndCreateUser(userRegistrationDto, errors);
         User updatedUser = userService.findUserById(userRegistrationDto.getUserId());
+
         if (isUsernameWasChanged(userRegistrationDto, updatedUser)) {
             validateUsernameIsUnique(userRegistrationDto, errors);
+
         }
     }
 
