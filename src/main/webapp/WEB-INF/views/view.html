@@ -33,7 +33,7 @@
 <main role="main" class="container">
     <div>
         <h2>User:</h2>
-        <table>
+        <table border="1" th:cellpadding="5">
             <thead>
             <tr>
                 <th>Username</th>
@@ -42,32 +42,33 @@
                 <th>Role</th>
                 <th>Status</th>
                 <th>Created date</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="user : ${user}">
-                <td th:text="${user.getUsername()}"></td>
-                <td th:text="${user.getFirstName()}"></td>
-                <td th:text="${user.getLastName()}"></td>
-                <td th:text="${user.getRole()}"></td>
-                <td th:text="${user.getStatus()}"></td>
-                <td th:text="${user.getCreatedDate()}"></td>
-                <td>
-                    <a th:href="@{/{id}/edit(id=${user.getId()})}">Edit</a>
-                </td>
-                <td>
-                    <form th:method="DELETE" th:action="@{/user/{id}(id=${user.getId()})}">
-                        <input type="submit" value="Delete"/>
-                    </form>
-                </td>
-                <td>
-                    <form th:method="PATCH" th:action="@{/user/{id}/lock(id=${user.getId()})}">
-                        <input type="submit" value="Change status"/>
-                    </form>
+                <td style="padding: 5px 5px 5px 5px" th:text="${user.getUsername()}"></td>
+                <td style="padding: 5px 5px 5px 5px" th:text="${user.getFirstName()}"></td>
+                <td style="padding: 5px 5px 5px 5px" th:text="${user.getLastName()}"></td>
+                <td style="padding: 5px 5px 5px 5px" th:text="${user.getRole()}"></td>
+                <td style="padding: 5px 5px 5px 5px"d th:text="${user.getStatus()}"></td>
+                <td style="padding: 5px 5px 5px 5px" th:text="${user.getCreatedDate()}"></td>
+                <td style="padding: 5px 5px 5px 5px">
+                    <div>
+                        <a th:href="@{/{id}/edit(id=${user.getId()})}">Edit</a>
+                        <form th:method="DELETE" th:action="@{/user/{id}(id=${user.getId()})}">
+                            <input type="submit" value="Delete"/>
+                        </form>
+                        <form th:method="PATCH" th:action="@{/user/{id}/lock(id=${user.getId()})}">
+                            <input type="submit" value="Change status"/>
+                        </form>
+                    </div>
+
                 </td>
 
             </tbody>
         </table>
+
     </div>
 </main>
 </body>

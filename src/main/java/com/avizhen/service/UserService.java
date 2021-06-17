@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    Page<User> findAllUsers(int pageNumber, String username, Role role);
+    Page<User> findAllUsers(int pageNumber, String username,  String firstName);
 
     Page<User> findAllUsers(int pageNumber);
 

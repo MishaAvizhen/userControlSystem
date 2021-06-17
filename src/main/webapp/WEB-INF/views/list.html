@@ -52,7 +52,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="user : ${users}">
-                    <td style="padding: 5px 5px 5px 5px;">
+                    <td style="padding: 5px 5px 5px 5px">
                         <a th:href="@{/user/{id}(id=${user.getId()})}" th:text="${user.getUsername()}">></a>
                     </td>
                     <td style="padding: 5px 5px 5px 5px" th:text="${user.getFirstName()}"></td>
@@ -104,7 +104,7 @@
             <div class="col-md-6 ">
                 <form method="GET" th:action="@{/searchUser}">
                     <input type="text" name="username" placeholder="Enter username"/>
-                    <input type="text" name="role" placeholder="Enter role"/>
+                    <input type="text" name="firstName" placeholder="Enter firstName"/>
                     <input type="submit" value="Search"/>
                     <a th:href="@{/user}">Clear</a>
                 </form>

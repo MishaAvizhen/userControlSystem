@@ -37,15 +37,15 @@ public class UserController {
     @GetMapping("/user")
     public String showUsersList(Model model) {
         model.asMap().remove("username");
-        model.asMap().remove("role");
+        model.asMap().remove("firstName");
         return showUsersListByPage(model, 1);
     }
 
     @GetMapping("/searchUser")
     public String showUsersListFiltered(Model model, @RequestParam(value = "username", required = false) String username,
-                                        @RequestParam(value = "role", required = false) String role) {
+                                        @RequestParam(value = "firstName", required = false) String firstName) {
         model.addAttribute("username", username);
-        model.addAttribute("role", role);
+        model.addAttribute("firstName", firstName);
         return showUsersListByPage(model, 1);
     }
 
@@ -53,8 +53,8 @@ public class UserController {
     public String showUsersListByPage(Model model, @PathVariable("pageNumber") int currentPage) {
 
         String username = (String) model.asMap().get("username");
-        String role = (String) model.asMap().get("role");
-        Page<User> userPage = userService.findAllUsers(currentPage, username, Role.defineRole(role));
+        String firstName = (String) model.asMap().get("firstName");
+        Page<User> userPage = userService.findAllUsers(currentPage, username, firstName);
         long totalElements = userPage.getTotalElements();
         int totalPages = userPage.getTotalPages();
         List<User> allUsers = userPage.getContent();

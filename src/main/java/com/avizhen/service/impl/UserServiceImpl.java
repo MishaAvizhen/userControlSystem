@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,16 +87,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<User> findAllUsers(int pageNumber, String username, Role role) {
+    public Page<User> findAllUsers(int pageNumber, String username, String firstName) {
         Pageable pageable = PageRequest.of(pageNumber - 1, 5);
-        if (username == null && role == null) {
+        if (StringUtils.isEmpty(username) && StringUtils.isEmpty(firstName)) {
             return userRepository.findAll(pageable);
-        } else if (username != null && role != null) {
-            return userRepository.findByRoleAndUsername(role, username, pageable);
-        } else if (username != null) {
+        } else if (!StringUtils.isEmpty(username) && !StringUtils.isEmpty(firstName)) {
+            return userRepository.findByFirstNameAndUsername(firstName, username, pageable);
+        } else if (!StringUtils.isEmpty(username)) {
             return userRepository.findByUsername(username, pageable);
         } else {
-            return userRepository.findByRole(role, pageable);
+            return userRepository.findByFirstName(firstName, pageable);
         }
     }
 
